@@ -14,8 +14,6 @@
 
 package net.ftlines.wicket.fullcalendar.callback;
 
-import java.util.UUID;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.util.collections.MicroMap;
@@ -23,7 +21,7 @@ import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 
 /**
  * Prevents multiple clicks while ajax request is executing
- * 
+ *
  * @author igor
  */
 public class BlockingDecorator implements IAjaxCallDecorator
@@ -34,7 +32,7 @@ public class BlockingDecorator implements IAjaxCallDecorator
 		"if (typeof(${var})=='undefined'){${var}=true;}" +
 		"if(${var}==false){return false;}" +
 		"${var}=false;";
-	
+
 	// @formatter:on
 
 	private final AbstractAjaxCallback callback;
@@ -65,7 +63,7 @@ public class BlockingDecorator implements IAjaxCallDecorator
 	}
 
 	@Override
-	public CharSequence decorateScript(CharSequence script)
+	public CharSequence decorateScript(Component component, CharSequence script)
 	{
 		switch (callback.getCalendar().getAjaxConcurrency())
 		{
@@ -81,7 +79,7 @@ public class BlockingDecorator implements IAjaxCallDecorator
 	}
 
 	@Override
-	public CharSequence decorateOnSuccessScript(CharSequence script)
+	public CharSequence decorateOnSuccessScript(Component component, CharSequence script)
 	{
 		switch (callback.getCalendar().getAjaxConcurrency())
 		{
@@ -96,8 +94,8 @@ public class BlockingDecorator implements IAjaxCallDecorator
 	}
 
 	@Override
-	public CharSequence decorateOnFailureScript(CharSequence script)
+	public CharSequence decorateOnFailureScript(Component component, CharSequence script)
 	{
-		return decorateOnSuccessScript(script);
+		return decorateOnSuccessScript(component, script);
 	}
 }

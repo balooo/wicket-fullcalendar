@@ -1,9 +1,9 @@
 /**
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -16,8 +16,8 @@ import net.ftlines.wicket.fullcalendar.CalendarResponse;
 import net.ftlines.wicket.fullcalendar.Event;
 import net.ftlines.wicket.fullcalendar.EventSource;
 
-import org.apache.wicket.Request;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.request.Request;
 
 public abstract class EventDroppedCallback extends AbstractAjaxCallbackWithClientsideRevert
 	implements
@@ -33,22 +33,22 @@ public abstract class EventDroppedCallback extends AbstractAjaxCallbackWithClien
 	@Override
 	public String getHandlerScript()
 	{
-		return "function(event, dayDelta, minuteDelta, allDay, revertFunc) { " + getCallbackScript(true) + "}";
+		return "function(event, dayDelta, minuteDelta, allDay, revertFunc) { " + getCallbackScript() + "}";
 	}
 
 	@Override
 	protected boolean onEvent(AjaxRequestTarget target)
 	{
 		Request r = getCalendar().getRequest();
-		String eventId = r.getParameter("eventId");
-		String sourceId = r.getParameter("sourceId");
+		String eventId = r.getQueryParameters().getParameterValue("eventId").toString();
+		String sourceId = r.getQueryParameters().getParameterValue("sourceId").toString();
 
 		EventSource source = getCalendar().getEventManager().getEventSource(sourceId);
 		Event event = source.getEventProvider().getEventForId(eventId);
 
-		int dayDelta = Integer.valueOf(r.getParameter("dayDelta"));
-		int minuteDelta = Integer.valueOf(r.getParameter("minuteDelta"));
-		boolean allDay = Boolean.valueOf(r.getParameter("allDay"));
+		int dayDelta = Integer.valueOf(r.getQueryParameters().getParameterValue("dayDelta").toString());
+		int minuteDelta = Integer.valueOf(r.getQueryParameters().getParameterValue("minuteDelta").toString());
+		boolean allDay = Boolean.valueOf(r.getQueryParameters().getParameterValue("allDay").toString());
 
 		return onEventDropped(new DroppedEvent(source, event, dayDelta, minuteDelta, allDay), new CalendarResponse(
 			getCalendar(), target));

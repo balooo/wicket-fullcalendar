@@ -1,9 +1,9 @@
 /**
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -15,10 +15,9 @@ package net.ftlines.wicket.fullcalendar.callback;
 import net.ftlines.wicket.fullcalendar.CalendarResponse;
 import net.ftlines.wicket.fullcalendar.ViewType;
 
-import org.apache.wicket.Request;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.request.Request;
 import org.joda.time.DateMidnight;
-import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -26,9 +25,9 @@ import org.joda.time.format.ISODateTimeFormat;
 
 /**
  * A base callback that passes back calendar's starting date
- * 
+ *
  * @author igor
- * 
+ *
  */
 public abstract class ViewDisplayCallback extends AbstractAjaxCallback implements CallbackWithHandler
 {
@@ -43,7 +42,7 @@ public abstract class ViewDisplayCallback extends AbstractAjaxCallback implement
 	public String getHandlerScript()
 	{
 		return String.format("function(v) {%s;}",
-			getCallbackScript(true));
+			getCallbackScript());
 	}
 
 
@@ -51,12 +50,12 @@ public abstract class ViewDisplayCallback extends AbstractAjaxCallback implement
 	protected void respond(AjaxRequestTarget target)
 	{
 		Request r = target.getPage().getRequest();
-		ViewType type = ViewType.forCode(r.getParameter("view"));
+		ViewType type = ViewType.forCode(r.getQueryParameters().getParameterValue("view").toString());
 		DateTimeFormatter fmt = ISODateTimeFormat.dateTimeParser().withZone(DateTimeZone.UTC);
-		DateMidnight start = fmt.parseDateTime(r.getParameter("start")).toDateMidnight();
-		DateMidnight end = fmt.parseDateTime(r.getParameter("end")).toDateMidnight();
-		DateMidnight visibleStart = fmt.parseDateTime(r.getParameter("visibleStart")).toDateMidnight();
-		DateMidnight visibleEnd = fmt.parseDateTime(r.getParameter("visibleEnd")).toDateMidnight();
+		DateMidnight start = fmt.parseDateTime(r.getQueryParameters().getParameterValue("start").toString()).toDateMidnight();
+		DateMidnight end = fmt.parseDateTime(r.getQueryParameters().getParameterValue("end").toString()).toDateMidnight();
+		DateMidnight visibleStart = fmt.parseDateTime(r.getQueryParameters().getParameterValue("visibleStart").toString()).toDateMidnight();
+		DateMidnight visibleEnd = fmt.parseDateTime(r.getQueryParameters().getParameterValue("visibleEnd").toString()).toDateMidnight();
 		View view = new View(type, start, end, visibleStart, visibleEnd);
 		CalendarResponse response = new CalendarResponse(getCalendar(), target);
 		onViewDisplayed(view, response);

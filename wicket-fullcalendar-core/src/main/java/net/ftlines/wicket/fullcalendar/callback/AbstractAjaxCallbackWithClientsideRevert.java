@@ -21,7 +21,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 
 abstract class AbstractAjaxCallbackWithClientsideRevert extends AbstractAjaxCallback
 {
-	private String uuid = "u" + UUID.randomUUID().toString().replace("-", "");
+	private final String uuid = "u" + UUID.randomUUID().toString().replace("-", "");
 
 	protected abstract String getRevertScript();
 
@@ -38,7 +38,7 @@ abstract class AbstractAjaxCallbackWithClientsideRevert extends AbstractAjaxCall
 	protected final void respond(AjaxRequestTarget target)
 	{
 		boolean result = onEvent(target);
-		target.prependJavascript(String.format("$.data(document, '%s', %s);", uuid, String.valueOf(result)));
+		target.prependJavaScript(String.format("$.data(document, '%s', %s);", uuid, String.valueOf(result)));
 	}
 
 	@Override
